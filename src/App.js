@@ -1,24 +1,123 @@
-import logo from './logo.svg';
-import './App.css';
+import { header } from "./css/headerstyle";
+import { Button, Dialog, Grid } from "@mui/material";
+import { useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getAuth } from "firebase/auth";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
+import {
+  collection,
+  getFirestore,
+  setDoc,
+  doc,
+  serverTimestamp,
+} from "firebase/firestore";
+
+import SignIn from "./firebase/SignIn";
+import SignOut from "./firebase/SignOut";
+import { fbApp } from "./firebase/firebase-project-config";
+import FormDialog from "./Dialog";
+import Books from "./Books";
+import { Container } from "@mui/system";
+
+const auth = getAuth(fbApp);
 
 function App() {
+  const [open, setOpen] = useState(false);
+  const [user] = useAuthState(auth);
+  const [bookValues, setBookValues] = useState({
+    title: "",
+    author: "",
+    pages: 0,
+    read: false,
+  });
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleChange = (prop) => (e) => {
+    const checked = e.target.checked ? true : false;
+    if (e.target.type !== "checkbox") {
+      setBookValues({
+        ...bookValues,
+        [prop]: e.target.value,
+      });
+    } else {
+      setBookValues({
+        ...bookValues,
+        [prop]: checked,
+      });
+    }
+  };
+  const sendBook = async () => {
+    const { uid, photoURL } = getAuth().currentUser;
+    const booksRef = collection(getFirestore(), "books");
+    await setDoc(doc(booksRef), {
+      title: bookValues.title,
+      author: bookValues.author,
+      pages: bookValues.pages,
+      read: bookValues.read,
+      createdAt: serverTimestamp(),
+      uid,
+      photoURL,
+    });
+    setBookValues({
+      title: "",
+      author: "",
+      pages: 0,
+      read: false,
+    });
+    setOpen(false);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <>
+      <header className="App" style={header}>
+        <span style={{ fontSize: "2em" }}> Bookshelf</span>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            width: "400px",
+            height: "80%",
+            justifyContent: "space-between",
+          }}
         >
-          Learn React
-        </a>
+          <SignOut />
+        </div>
+        {user ? null : <SignIn />}
+        {user && (
+          <Button
+            size="large"
+            startIcon={<AutoStoriesIcon />}
+            variant="outlined"
+            onClick={handleClickOpen}
+          >
+            Add Book
+          </Button>
+        )}
       </header>
-    </div>
+      <main style={{ paddingLeft: "5%", paddingRight: "5%" }}>
+        <Container>
+          <Grid
+            container
+            spacing={3}
+            justifyContent="space-between"
+            sx={{ display: "flex", flexWrap: "wrap", mt: 10, mb: 10 }}
+          >
+            <Books />
+          </Grid>
+        </Container>
+      </main>
+      <FormDialog
+        open={open}
+        handleClose={handleClose}
+        handleChange={handleChange}
+        sendBook={sendBook}
+      />
+    </>
   );
 }
 
