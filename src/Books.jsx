@@ -1,66 +1,83 @@
 import { myData } from "./firebase/getData";
+import { Button, Grid, Paper, Typography, IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import {
-  useCollectionData,
-  useCollection,
-} from "react-firebase-hooks/firestore";
-import { Button, Grid, Paper, Typography } from "@mui/material";
-import {
-  doc,
-  deleteDoc,
   getDoc,
   getFirestore,
   collection,
   snapshotChanges,
+  onSnapshot,
+  doc,
+  deleteDoc,
 } from "firebase/firestore";
 
+import { useState, useEffect } from "react";
+
 export default function Books() {
-  const [books] = useCollectionData(myData, { idField: "id" });
-  const [id] = useCollection(myData);
-  const showBook = async (book) => {
-    console.log(id);
+  const typoStyle = {
+    pt: 2,
+    display: "flex",
+    justifyContent: "space-between",
+  };
+  const [books, setBooks] = useState([
+    { title: "loading ...", id: "initialId" },
+  ]);
+  useEffect(
+    () =>
+      onSnapshot(collection(getFirestore(), "books"), (snapshot) => {
+        setBooks(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      }),
+    []
+  );
+
+  const deleteBook = async (id) => {
+    await deleteDoc(doc(getFirestore(), "books", id));
   };
   return (
     <>
       {books &&
         books.map((book) => {
           return (
-            <Grid key={book.pages} item xs={12} sm={6} md={4}>
+            <Grid key={book.id} item xs={12} sm={6} md={4}>
               <Paper
                 elevation={2}
                 sx={{
                   padding: 2,
                 }}
               >
-                <Typography
-                  variant="h5"
-                  component="h3"
-                  sx={{ display: "flex", justifyContent: "space-between" }}
-                >
+                <Typography variant="h5" component="h3" sx={typoStyle}>
                   Title: <span>{book.title}</span>
                 </Typography>
-                <Typography
-                  variant="h5"
-                  component="h3"
-                  sx={{ display: "flex", justifyContent: "space-between" }}
-                >
+                <Typography variant="h5" component="h3" sx={typoStyle}>
                   Author: <span>{book.author}</span>
                 </Typography>
-                <Typography
-                  variant="h5"
-                  component="h3"
-                  sx={{ display: "flex", justifyContent: "space-between" }}
-                >
+                <Typography variant="h5" component="h3" sx={typoStyle}>
                   Pages: <span>{book.pages}</span>
                 </Typography>
-                <Typography
-                  variant="h5"
-                  component="h3"
-                  sx={{ display: "flex", justifyContent: "space-between" }}
-                >
+                <Typography variant="h5" component="h3" sx={typoStyle}>
                   Read: <span>{book.read ? "read" : "not read"}</span>
                 </Typography>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginTop: 30,
+                    borderTop: ".5px solid #333",
+                  }}
+                >
+                  <IconButton
+                    color="primary"
+                    variant="outlined"
+                    onClick={() => deleteBook(book.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                  <IconButton color="primary" variant="outlined">
+                    <EditIcon />
+                  </IconButton>
+                </div>
               </Paper>
-              <Button onClick={() => showBook(book)}>click me</Button>
             </Grid>
           );
         })}

@@ -10,6 +10,7 @@ import {
   setDoc,
   doc,
   serverTimestamp,
+  addDoc,
 } from "firebase/firestore";
 
 import SignIn from "./firebase/SignIn";
@@ -54,7 +55,7 @@ function App() {
   const sendBook = async () => {
     const { uid, photoURL } = getAuth().currentUser;
     const booksRef = collection(getFirestore(), "books");
-    await setDoc(doc(booksRef), {
+    const docRef = await addDoc(booksRef, {
       title: bookValues.title,
       author: bookValues.author,
       pages: bookValues.pages,
@@ -107,7 +108,7 @@ function App() {
             justifyContent="space-between"
             sx={{ display: "flex", flexWrap: "wrap", mt: 10, mb: 10 }}
           >
-            <Books />
+            {user && <Books />}
           </Grid>
         </Container>
       </main>
