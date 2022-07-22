@@ -1,26 +1,15 @@
-import { myData } from "./firebase/getData";
-import { Button, Grid, Paper, Typography, IconButton } from "@mui/material";
+import { Grid, Paper, Typography, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import {
-  getDoc,
-  getFirestore,
-  collection,
-  snapshotChanges,
-  onSnapshot,
-  doc,
-  deleteDoc,
-} from "firebase/firestore";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 
-import { useState, useEffect } from "react";
-
-export default function Books() {
+export default function Books({ handleEdit, deleteBook, books, uploadImage }) {
   const typoStyle = {
     pt: 2,
     display: "flex",
     justifyContent: "space-between",
   };
-  const [books, setBooks] = useState([
+  /*  const [books, setBooks] = useState([
     { title: "loading ...", id: "initialId" },
   ]);
   useEffect(
@@ -33,7 +22,7 @@ export default function Books() {
 
   const deleteBook = async (id) => {
     await deleteDoc(doc(getFirestore(), "books", id));
-  };
+  }; */
   return (
     <>
       {books &&
@@ -46,6 +35,13 @@ export default function Books() {
                   padding: 2,
                 }}
               >
+                {book.imageURL && (
+                  <img
+                    src={book.imageURL}
+                    alt={book.title}
+                    style={{ width: "100%" }}
+                  />
+                )}
                 <Typography variant="h5" component="h3" sx={typoStyle}>
                   Title: <span>{book.title}</span>
                 </Typography>
@@ -66,6 +62,15 @@ export default function Books() {
                     borderTop: ".5px solid #333",
                   }}
                 >
+                  <IconButton color="primary" component="label">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      hidden
+                      onChange={(e) => uploadImage(e, book)}
+                    ></input>
+                    <AddPhotoAlternateIcon />
+                  </IconButton>
                   <IconButton
                     color="primary"
                     variant="outlined"
@@ -73,7 +78,11 @@ export default function Books() {
                   >
                     <DeleteIcon />
                   </IconButton>
-                  <IconButton color="primary" variant="outlined">
+                  <IconButton
+                    color="primary"
+                    variant="outlined"
+                    onClick={() => handleEdit(book)}
+                  >
                     <EditIcon />
                   </IconButton>
                 </div>

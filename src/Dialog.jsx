@@ -13,12 +13,17 @@ export default function FormDialog({
   handleClose,
   handleChange,
   sendBook,
+  saveEdit,
+  isEdit,
+  book,
 }) {
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Add Book</DialogTitle>
+      <DialogTitle>{isEdit ? "Edit Book" : "Add Book"}</DialogTitle>
       <DialogContent>
-        <DialogContentText>Add a Book to the Bookshelf</DialogContentText>
+        <DialogContentText>
+          {isEdit ? "Change" : "Add"} a Book to the Bookshelf
+        </DialogContentText>
         <TextField
           required
           autoFocus
@@ -28,6 +33,7 @@ export default function FormDialog({
           type="text"
           fullWidth
           variant="standard"
+          value={book.title}
           onChange={handleChange("title")}
         />
         <TextField
@@ -38,6 +44,7 @@ export default function FormDialog({
           type="text"
           fullWidth
           variant="standard"
+          value={book.author}
           onChange={handleChange("author")}
         />
         <TextField
@@ -48,16 +55,26 @@ export default function FormDialog({
           type="number"
           fullWidth
           variant="standard"
+          value={book.pages}
           onChange={handleChange("pages")}
         />
-        <FormControlLabel
-          control={<Checkbox onChange={handleChange("read")} />}
-          label="Read?"
-        />
+        {book.read ? (
+          <FormControlLabel
+            control={<Checkbox onChange={handleChange("read")} checked />}
+            label="Read?"
+          />
+        ) : (
+          <FormControlLabel
+            control={<Checkbox onChange={handleChange("read")} />}
+            label="Read?"
+          />
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={sendBook}>Add Book</Button>
+        <Button onClick={isEdit ? saveEdit : sendBook}>
+          {isEdit ? "Save" : "Add Book"}
+        </Button>
       </DialogActions>
     </Dialog>
   );

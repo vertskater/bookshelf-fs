@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
 
 export const fbConfig = {
   apiKey: "AIzaSyAVasB-0ximtVTcbytYpsmrlIYYXyNQw7s",
@@ -10,3 +11,4 @@ export const fbConfig = {
 };
 
 export const fbApp = initializeApp(fbConfig);
+export const storage = getStorage(fbApp);

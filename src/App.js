@@ -19,60 +19,26 @@ import { fbApp } from "./firebase/firebase-project-config";
 import FormDialog from "./Dialog";
 import Books from "./Books";
 import { Container } from "@mui/system";
+import useData from "./firebase/utils";
+import useBooks from "./firebase/useBooks";
 
 const auth = getAuth(fbApp);
 
 function App() {
-  const [open, setOpen] = useState(false);
   const [user] = useAuthState(auth);
-  const [bookValues, setBookValues] = useState({
-    title: "",
-    author: "",
-    pages: 0,
-    read: false,
-  });
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleChange = (prop) => (e) => {
-    const checked = e.target.checked ? true : false;
-    if (e.target.type !== "checkbox") {
-      setBookValues({
-        ...bookValues,
-        [prop]: e.target.value,
-      });
-    } else {
-      setBookValues({
-        ...bookValues,
-        [prop]: checked,
-      });
-    }
-  };
-  const sendBook = async () => {
-    const { uid, photoURL } = getAuth().currentUser;
-    const booksRef = collection(getFirestore(), "books");
-    const docRef = await addDoc(booksRef, {
-      title: bookValues.title,
-      author: bookValues.author,
-      pages: bookValues.pages,
-      read: bookValues.read,
-      createdAt: serverTimestamp(),
-      uid,
-      photoURL,
-    });
-    setBookValues({
-      title: "",
-      author: "",
-      pages: 0,
-      read: false,
-    });
-    setOpen(false);
-  };
-
+  const [
+    handleEdit,
+    handleClickOpen,
+    handleClose,
+    handleChange,
+    sendBook,
+    saveEdit,
+    open,
+    isEdit,
+    bookValues,
+    uploadImage,
+  ] = useData();
+  const [books, deleteBook] = useBooks();
   return (
     <>
       <header className="App" style={header}>
@@ -108,7 +74,14 @@ function App() {
             justifyContent="space-between"
             sx={{ display: "flex", flexWrap: "wrap", mt: 10, mb: 10 }}
           >
-            {user && <Books />}
+            {user && (
+              <Books
+                handleEdit={handleEdit}
+                deleteBook={deleteBook}
+                books={books}
+                uploadImage={uploadImage}
+              />
+            )}
           </Grid>
         </Container>
       </main>
@@ -117,6 +90,9 @@ function App() {
         handleClose={handleClose}
         handleChange={handleChange}
         sendBook={sendBook}
+        isEdit={isEdit}
+        saveEdit={saveEdit}
+        book={bookValues}
       />
     </>
   );
