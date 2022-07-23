@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { getAuth } from "firebase/auth";
 import {
   getFirestore,
@@ -7,6 +7,7 @@ import {
   serverTimestamp,
   setDoc,
   doc,
+  updateDoc,
 } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "./firebase-project-config";
@@ -21,7 +22,7 @@ export default function useData() {
     read: false,
   });
   // TODO: Need to clear the file stack. Current.value didnt work out.
-  const resetImage = () => {};
+  //const resetImage = () => {};
   const [currentEditBook, setCurrentEditBook] = useState({});
   const handleClickOpen = () => {
     setOpen(true);
@@ -48,7 +49,7 @@ export default function useData() {
   const sendBook = async () => {
     const { uid, photoURL } = getAuth().currentUser;
     const booksRef = collection(getFirestore(), "books");
-    const docRef = await addDoc(booksRef, {
+    await addDoc(booksRef, {
       title: bookValues.title,
       author: bookValues.author,
       pages: bookValues.pages,
@@ -60,7 +61,7 @@ export default function useData() {
     setBookValues({
       title: "",
       author: "",
-      pages: null,
+      pages: "",
       read: false,
     });
     setOpen(false);
@@ -87,28 +88,30 @@ export default function useData() {
       createdAt: serverTimestamp(),
       uid,
       photoURL,
+      imageURL: currentEditBook.imageURL || "",
+      storageUri: currentEditBook.storageUri || "",
     });
     setOpen(false);
     setIsEdit(false);
     setBookValues({
       title: "",
       author: "",
-      pages: null,
+      pages: "",
       read: false,
     });
   };
   const uploadImage = async (e, book) => {
     e.preventDefault();
+    const LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif?a";
     const { uid, photoURL } = getAuth().currentUser;
     let file = e.target.files[0];
     try {
       const filePath = `${getAuth().currentUser.uid}/${book.id}/${file.name}`;
       const newImageRef = ref(storage, filePath);
-      console.log(newImageRef);
       const fileSnapshot = await uploadBytesResumable(newImageRef, file);
       const publicImageUrl = await getDownloadURL(newImageRef);
       const docRef = doc(getFirestore(), "books", book.id);
-      setDoc(docRef, {
+      await setDoc(docRef, {
         title: book.title,
         author: book.author,
         pages: book.pages,
@@ -116,8 +119,11 @@ export default function useData() {
         createdAt: serverTimestamp(),
         uid,
         photoURL,
-        imageURL: publicImageUrl,
+        imageURL: LOADING_IMAGE_URL,
         storageUri: fileSnapshot.metadata.fullPath,
+      });
+      await updateDoc(docRef, {
+        imageURL: publicImageUrl,
       });
     } catch (error) {
       console.error("couldnt fetch image", error);

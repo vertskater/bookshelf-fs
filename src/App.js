@@ -1,17 +1,8 @@
 import { header } from "./css/headerstyle";
 import { Button, Dialog, Grid } from "@mui/material";
-import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import {
-  collection,
-  getFirestore,
-  setDoc,
-  doc,
-  serverTimestamp,
-  addDoc,
-} from "firebase/firestore";
 
 import SignIn from "./firebase/SignIn";
 import SignOut from "./firebase/SignOut";
@@ -74,13 +65,15 @@ function App() {
             justifyContent="space-between"
             sx={{ display: "flex", flexWrap: "wrap", mt: 10, mb: 10 }}
           >
-            {user && (
+            {user ? (
               <Books
                 handleEdit={handleEdit}
                 deleteBook={deleteBook}
                 books={books}
                 uploadImage={uploadImage}
               />
+            ) : (
+              <div>Please Sign in to see your Books</div>
             )}
           </Grid>
         </Container>

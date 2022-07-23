@@ -1,3 +1,7 @@
+# Bookshelf with Firebase as Backend
+
+You can add Books using Firabse Authentication, Storage and Firebase Database as BaaS.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

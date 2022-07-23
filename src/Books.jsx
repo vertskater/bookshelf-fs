@@ -39,7 +39,7 @@ export default function Books({ handleEdit, deleteBook, books, uploadImage }) {
                   <img
                     src={book.imageURL}
                     alt={book.title}
-                    style={{ width: "100%" }}
+                    style={{ maxWidth: "100%" }}
                   />
                 )}
                 <Typography variant="h5" component="h3" sx={typoStyle}>
@@ -74,7 +74,7 @@ export default function Books({ handleEdit, deleteBook, books, uploadImage }) {
                   <IconButton
                     color="primary"
                     variant="outlined"
-                    onClick={() => deleteBook(book.id)}
+                    onClick={() => deleteBook(book)}
                   >
                     <DeleteIcon />
                   </IconButton>
