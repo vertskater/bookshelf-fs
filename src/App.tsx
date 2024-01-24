@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { auth } from "./firebase/firebaseInit";
 import SignInButton from "./firebase/SignIn";
 import SignOutButton from "./firebase/SignOut";
@@ -7,9 +7,17 @@ import { Button, Container, Grid } from "@mui/material";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Books from "./Books";
 import Form from "./Form";
+import { TBook } from "./useBooks";
 
 function App() {
   const [open, setOpen] = useState(false);
+  const [currentBook, setCurrentBook] = useState<TBook>({
+    id: "",
+    title: "",
+    author: "",
+    pages: 0,
+    read: false,
+  } as TBook);
   const [user] = useAuthState(auth);
   const header = {
     height: "10vh",
@@ -21,9 +29,31 @@ function App() {
     padding: "3px 5%",
   };
 
-  const handleFormOpen = () => {
+  const handleFormOpen = (book: TBook) => {
     setOpen(true);
+    setCurrentBook(book);
   };
+
+  const handleFormChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { id, value, type, checked } = event.target;
+    if (type === "checkbox") {
+      setCurrentBook({
+        ...currentBook!,
+        [id]: checked,
+      });
+    } else if (type === "number") {
+      setCurrentBook({
+        ...currentBook!,
+        [id]: +value,
+      });
+    } else {
+      setCurrentBook({
+        ...currentBook!,
+        [id]: value,
+      });
+    }
+  };
+
   return (
     <>
       <header className="App" style={header}>
@@ -79,7 +109,21 @@ function App() {
           </Grid>
         </Container>
       </main>
-      <Form open={open} handleClose={() => setOpen(false)} />
+      <Form
+        open={open}
+        book={currentBook}
+        handleClose={() => {
+          setOpen(false);
+          setCurrentBook({
+            id: "",
+            title: "",
+            author: "",
+            pages: 0,
+            read: false,
+          } as TBook);
+        }}
+        handleChange={handleFormChange}
+      />
     </>
   );
 }

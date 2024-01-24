@@ -14,7 +14,7 @@ const typoStyle = {
 };
 
 interface Props {
-  formOpen: () => void;
+  formOpen: (book: TBook) => void;
 }
 export default function BookCard({ formOpen }: Props) {
   const [books, , deleteBook, addImage] = useBooks();
@@ -87,7 +87,7 @@ export default function BookCard({ formOpen }: Props) {
                     <IconButton
                       color="primary"
                       component="button"
-                      onClick={formOpen}
+                      onClick={() => formOpen(book)}
                     >
                       <EditIcon />
                     </IconButton>
