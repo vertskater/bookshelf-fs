@@ -36,22 +36,23 @@ function App() {
 
   const handleFormChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { id, value, type, checked } = event.target;
-    if (type === "checkbox") {
-      setCurrentBook({
-        ...currentBook!,
-        [id]: checked,
-      });
-    } else if (type === "number") {
-      setCurrentBook({
-        ...currentBook!,
-        [id]: +value,
-      });
-    } else {
-      setCurrentBook({
-        ...currentBook!,
-        [id]: value,
-      });
+    let updatedValue;
+
+    switch (type) {
+      case 'checkbox':
+        updatedValue = checked;
+        break;
+      case 'number':
+        updatedValue = +value;
+        break;
+      default:
+        updatedValue = value;
     }
+
+    setCurrentBook({
+      ...currentBook!,
+      [id]: updatedValue,
+    })
   };
 
   return (
