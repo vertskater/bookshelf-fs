@@ -1,30 +1,36 @@
-# React + TypeScript + Vite
+# Bookshelf App 📚
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The **Bookshelf App** is a simple and user-friendly platform for managing your personal book collection. It supports **CRUD operations** (Create, Read, Update, Delete), **Google Login** for secure authentication, and uses **Firebase** as the backend for real-time data storage and retrieval.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🌟 Features
 
-## Expanding the ESLint configuration
+- **Google Login**: Secure and seamless authentication using your Google account.
+- **CRUD Operations**: 
+  - Add books to your collection.
+  - View a list of all your books.
+  - Edit book details.
+  - Delete books you no longer need.
+- **Firebase Integration**: Real-time database for efficient data storage and syncing.
+- **Responsive Design**: Optimized for both desktop and mobile devices.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+---
 
-- Configure the top-level `parserOptions` property like this:
+## 🚀 Live Demo
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+👉 **[Try the Bookshelf App](https://bookshelf-9df37.firebaseapp.com/)** *(Replace with your live demo URL)*
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+---
+
+## 🛠️ Built With
+
+- **Frontend**:
+  - **HTML5**: For the app's structure.
+  - **CSS3**: For styling and layout.
+  - **JavaScript (ES6)**: For interactivity and logic.
+- **Backend**:
+  - **Firebase**: 
+    - Authentication (Google Login).
+    - Firestore (Database for CRUD operations).
+
