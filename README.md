@@ -19,7 +19,7 @@ The **Bookshelf App** is a simple and user-friendly platform for managing your p
 
 ## 🚀 Live Demo
 
-👉 **[Try the Bookshelf App](https://bookshelf-9df37.firebaseapp.com/)** *(Replace with your live demo URL)*
+👉 **[Try the Bookshelf App](https://bookshelf-9df37.firebaseapp.com/)** 
 
 ---
 
