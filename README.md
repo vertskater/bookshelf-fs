@@ -19,7 +19,7 @@ The **Bookshelf App** is a simple and user-friendly platform for managing your p
 
 ## 🚀 Live Demo
 
-👉 **[Try the Bookshelf App](bookshelf-fs.vercel.app)** 
+👉 **[Try the Bookshelf App](https://bookshelf-fs.vercel.app)** 
 
 ---
 
